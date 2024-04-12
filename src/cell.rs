@@ -1,19 +1,13 @@
 use std::cell::UnsafeCell;
 
-pub struct Cell<T>
-where
-    T: Copy,
-{
+pub struct Cell<T> {
     value: UnsafeCell<T>,
 }
 
 // should not be implemented!
-unsafe impl<T> Sync for Cell<T> where T: Copy {}
+unsafe impl<T> Sync for Cell<T> {}
 
-impl<T> Cell<T>
-where
-    T: Copy,
-{
+impl<T> Cell<T> {
     pub fn new(value: T) -> Self {
         Cell {
             value: UnsafeCell::new(value),
@@ -26,7 +20,10 @@ where
         }
     }
 
-    pub fn get(&self) -> T {
+    pub fn get(&self) -> T
+    where
+        T: Copy,
+    {
         unsafe { *self.value.get() }
     }
 }
