@@ -4,7 +4,7 @@ pub struct Cell<T> {
     value: UnsafeCell<T>,
 }
 
-// should not be implemented!
+// should not be implemented! Only for demonstration
 unsafe impl<T> Sync for Cell<T> {}
 
 impl<T> Cell<T> {
@@ -15,6 +15,8 @@ impl<T> Cell<T> {
     }
 
     pub fn set(&self, value: T) {
+        // SAFETY: we know that no-one else hold reference on this value so reference invaliding won`t happen
+        // SAFETY: we know that concurrent set not allowed because of !Sync (implied via UnsafeCell)
         unsafe {
             *self.value.get() = value;
         }
@@ -24,6 +26,7 @@ impl<T> Cell<T> {
     where
         T: Copy,
     {
+        // SAFETY: we know that no-one else modify this value because of !Sync (implied via UnsafeCell)
         unsafe { *self.value.get() }
     }
 }
@@ -35,7 +38,7 @@ mod tests {
     use super::Cell;
 
     #[test]
-    fn test_multithread_set() {
+    fn test_concurrent_set() {
         let num = Arc::new(Cell::new(0));
 
         let limit = 1000000;
