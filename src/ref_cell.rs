@@ -99,7 +99,6 @@ impl<T> RefCell<T> {
     pub fn borrow_mut(&self) -> Option<RefMut<'_, T>> {
         if let RefState::Unshared = self.state.get() {
             self.state.set(RefState::Exclusive);
-            // SAFETY: no other states have  been given out because Unshared state
             return Some(RefMut { refcell: { self } });
         }
 
