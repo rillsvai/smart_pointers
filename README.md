@@ -6,4 +6,3 @@ Implementation of some smart pointers (using core struct) and tests for better u
 - `Cell`
 - `RefCell`
 - `Rc`
-- `Cow`
